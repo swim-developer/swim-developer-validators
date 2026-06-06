@@ -1,0 +1,18 @@
+FROM docker.io/apache/activemq-artemis:2.44.0
+USER root
+RUN mkdir -p /var/lib/artemis-instance/etc-override /certs
+COPY swim-developer-validators/infrastructure/artemis/broker.xml /var/lib/artemis-instance/etc-override/broker.xml
+COPY swim-developer-validators/infrastructure/artemis/bootstrap.xml /var/lib/artemis-instance/etc-override/bootstrap.xml
+COPY swim-developer-validators/infrastructure/artemis/login.config /var/lib/artemis-instance/etc-override/login.config
+COPY swim-developer-validators/infrastructure/artemis/cert-users.properties /var/lib/artemis-instance/etc-override/cert-users.properties
+COPY swim-developer-validators/infrastructure/artemis/cert-roles.properties /var/lib/artemis-instance/etc-override/cert-roles.properties
+COPY swim-developer-validators/infrastructure/artemis/artemis-roles.properties /var/lib/artemis-instance/etc-override/artemis-roles.properties
+COPY swim-developer-tools/infrastructure/certificates/generated/dnotam-consumer-validator-artemis/broker.p12 /certs/broker.p12
+COPY swim-developer-tools/infrastructure/certificates/generated/ca-truststore.p12 /certs/truststore.p12
+RUN chmod 644 /certs/*.p12 \
+    /var/lib/artemis-instance/etc-override/broker.xml \
+    /var/lib/artemis-instance/etc-override/bootstrap.xml \
+    /var/lib/artemis-instance/etc-override/login.config \
+    /var/lib/artemis-instance/etc-override/cert-users.properties \
+    /var/lib/artemis-instance/etc-override/cert-roles.properties \
+    /var/lib/artemis-instance/etc-override/artemis-roles.properties
